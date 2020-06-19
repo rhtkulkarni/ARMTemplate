@@ -1,0 +1,43 @@
+#To run a selected line, press "ctrl+'"
+#Login to Azure
+az login
+
+#List all accounts
+az account list --all
+
+#Set a account as default
+az account set --subscription "Azure Pass1"
+
+#Variables
+$rgName="rg-armtemplate"
+$locName="EastUS"
+
+#Create a resource group
+az group create `
+--name $rgName `
+--location $locName
+
+#Create a template
+$templateFile='rkazuretemplate.json'
+
+$templateName='parametersTemplate'
+$storageName='rkstorage'
+
+#create storage account with parameters
+
+az deployment group create `
+--name $templateName `
+--resource-group $rgName `
+--template-file $templateFile `
+--parameters storagePrefix=$storageName storageSKU=Standard_GRS
+
+
+az storage account list --output table
+
+#List all resource groups
+az group list
+az group list --output table
+
+#delete a resource group
+# az group delete --name $rgName `
+# --no-wait --yes
